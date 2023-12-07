@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../model/article_model.dart';
-import '../widgets/article_web_view.dart';
+import 'article_web_view.dart';
 
 class ArticleDetailPage extends StatelessWidget {
   final ArticleModel article;
