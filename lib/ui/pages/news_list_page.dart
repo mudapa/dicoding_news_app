@@ -1,59 +1,72 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../model/article_model.dart';
-import 'article_detail_page.dart';
+import '../../share/style.dart';
+import '../widgets/platform_widget.dart';
+import 'article_list_page.dart';
+import 'settings_page.dart';
 
-class NewsListPage extends StatelessWidget {
+class NewsListPage extends StatefulWidget {
   const NewsListPage({Key? key}) : super(key: key);
 
   @override
+  State<NewsListPage> createState() => _NewsListPageState();
+}
+
+class _NewsListPageState extends State<NewsListPage> {
+  int _bottomNavIndex = 0;
+
+  final List<Widget> _listWidget = const [
+    ArticleListPage(),
+    SettingsPage(),
+  ];
+
+  final List<BottomNavigationBarItem> _bottomNavBarItems = [
+    BottomNavigationBarItem(
+      icon: Icon(Platform.isIOS ? CupertinoIcons.news : Icons.public),
+      label: "Headline",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Platform.isIOS ? CupertinoIcons.settings : Icons.settings),
+      label: "Setting",
+    ),
+  ];
+
+  @override
   Widget build(BuildContext context) {
+    return PlatformWidget(
+      androidBuilder: _buildAndroid,
+      iosBuilder: _buildIos,
+    );
+  }
+
+  Widget _buildAndroid(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('News App'),
-      ),
-      body: SafeArea(
-        child: FutureBuilder(
-          future:
-              DefaultAssetBundle.of(context).loadString('assets/articles.json'),
-          builder: (context, snapshot) {
-            final List<ArticleModel> articles = parseArticles(snapshot.data);
-            return ListView.builder(
-              itemCount: articles.length,
-              itemBuilder: (context, index) {
-                return _buildArticleItem(context, articles[index]);
-              },
-            );
-          },
-        ),
+      body: _listWidget[_bottomNavIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: secondaryColor,
+        currentIndex: _bottomNavIndex,
+        items: _bottomNavBarItems,
+        onTap: (selected) {
+          setState(() {
+            _bottomNavIndex = selected;
+          });
+        },
       ),
     );
   }
 
-  Widget _buildArticleItem(BuildContext context, ArticleModel article) {
-    return ListTile(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return ArticleDetailPage(
-              article: article,
-            );
-          },
-        ));
-      },
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      leading: Hero(
-        tag: article.urlToImage!,
-        child: Image.network(
-          article.urlToImage!,
-          width: 100,
-          errorBuilder: (ctx, error, _) =>
-              const Center(child: Icon(Icons.error)),
-        ),
+  Widget _buildIos(BuildContext context) {
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        activeColor: secondaryColor,
+        items: _bottomNavBarItems,
       ),
-      title: Text(article.title!),
-      subtitle: Text(article.author!),
+      tabBuilder: (context, index) {
+        return _listWidget[index];
+      },
     );
   }
 }
