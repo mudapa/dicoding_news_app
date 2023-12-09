@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../provider/news_provider.dart';
+import '../../services/article_service.dart';
 import '../../share/style.dart';
 import '../widgets/platform_widget.dart';
 import 'article_list_page.dart';
@@ -18,9 +21,12 @@ class NewsListPage extends StatefulWidget {
 class _NewsListPageState extends State<NewsListPage> {
   int _bottomNavIndex = 0;
 
-  final List<Widget> _listWidget = const [
-    ArticleListPage(),
-    SettingsPage(),
+  final List<Widget> _listWidget = [
+    ChangeNotifierProvider<NewsProvider>(
+      create: (_) => NewsProvider(articleService: ArticleService()),
+      child: const ArticleListPage(),
+    ),
+    const SettingsPage(),
   ];
 
   final List<BottomNavigationBarItem> _bottomNavBarItems = [
