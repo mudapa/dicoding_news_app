@@ -4,7 +4,7 @@ import '../../model/article_model.dart';
 import 'article_web_view.dart';
 
 class ArticleDetailPage extends StatelessWidget {
-  final ArticleModel article;
+  final Article article;
   const ArticleDetailPage({
     Key? key,
     required this.article,
@@ -19,16 +19,11 @@ class ArticleDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Hero(
-              tag: article.urlToImage!,
-              child: Image.network(article.urlToImage!),
-            ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(article.description!),
                   const Divider(color: Colors.grey),
                   Text(
                     article.title!,
@@ -43,10 +38,6 @@ class ArticleDetailPage extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text('Author: ${article.author}'),
                   const Divider(color: Colors.grey),
-                  Text(
-                    article.content!,
-                    style: const TextStyle(fontSize: 16),
-                  ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     child: const Text('Read more'),

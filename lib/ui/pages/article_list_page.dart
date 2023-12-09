@@ -2,11 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/article_model.dart';
+import '../../services/article_service.dart';
+import '../widgets/card_article.dart';
 import '../widgets/platform_widget.dart';
-import 'article_detail_page.dart';
 
-class ArticleListPage extends StatelessWidget {
+class ArticleListPage extends StatefulWidget {
   const ArticleListPage({Key? key}) : super(key: key);
+
+  @override
+  State<ArticleListPage> createState() => _ArticleListPageState();
+}
+
+class _ArticleListPageState extends State<ArticleListPage> {
+  late Future<ArticleModel> _article;
+
+  @override
+  void initState() {
+    super.initState();
+    _article = ArticleService().topHeadlines();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,45 +51,32 @@ class ArticleListPage extends StatelessWidget {
 
   Widget _buildList(BuildContext context) {
     return FutureBuilder(
-      future: DefaultAssetBundle.of(context).loadString('assets/articles.json'),
-      builder: (context, snapshot) {
-        final List<ArticleModel> articles = parseArticles(snapshot.data);
-        return ListView.builder(
-          itemCount: articles.length,
-          itemBuilder: (context, index) {
-            return _buildArticleItem(context, articles[index]);
-          },
-        );
+      future: _article,
+      builder: (context, AsyncSnapshot<ArticleModel> snapshot) {
+        var state = snapshot.connectionState;
+        if (state != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data?.articles!.length,
+              itemBuilder: (context, index) {
+                var article = snapshot.data?.articles![index];
+                return CardArticle(article: article!);
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Material(
+                child: Text(snapshot.error.toString()),
+              ),
+            );
+          } else {
+            return const Material(child: Text(''));
+          }
+        }
       },
-    );
-  }
-
-  Widget _buildArticleItem(BuildContext context, ArticleModel article) {
-    return Material(
-      child: ListTile(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return ArticleDetailPage(
-                article: article,
-              );
-            },
-          ));
-        },
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        leading: Hero(
-          tag: article.urlToImage!,
-          child: Image.network(
-            article.urlToImage!,
-            width: 100,
-            errorBuilder: (ctx, error, _) =>
-                const Center(child: Icon(Icons.error)),
-          ),
-        ),
-        title: Text(article.title!),
-        subtitle: Text(article.author!),
-      ),
     );
   }
 }
