@@ -26,12 +26,18 @@ class Article {
   final String? title;
   final String? url;
   final DateTime? publishedAt;
+  final String? urlToImage;
+  final String? description;
+  final String? content;
 
   Article({
     this.author,
     this.title,
     this.url,
     this.publishedAt,
+    this.urlToImage,
+    this.description,
+    this.content,
   });
 
   factory Article.fromJson(Map<String, dynamic> json) {
@@ -40,6 +46,9 @@ class Article {
       title: json["title"],
       url: json["url"],
       publishedAt: DateTime.parse(json["publishedAt"]),
+      urlToImage: json["urlToImage"],
+      description: json["description"],
+      content: json["content"],
     );
   }
 
@@ -48,5 +57,8 @@ class Article {
         "title": title,
         "url": url,
         "publishedAt": publishedAt!.toIso8601String(),
+        "urlToImage": urlToImage,
+        "description": description,
+        "content": content,
       };
 }

@@ -19,6 +19,10 @@ class ArticleDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Hero(
+              tag: article.urlToImage!,
+              child: Image.network(article.urlToImage!),
+            ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
@@ -39,6 +43,12 @@ class ArticleDetailPage extends StatelessWidget {
                   Text('Author: ${article.author}'),
                   const Divider(color: Colors.grey),
                   const SizedBox(height: 10),
+                  Text(
+                    article.content!,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 10),
+                  const Divider(color: Colors.grey),
                   ElevatedButton(
                     child: const Text('Read more'),
                     onPressed: () {
