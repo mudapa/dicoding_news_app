@@ -19,6 +19,13 @@ class ArticleModel {
               article.author != null && article.publishedAt != null)),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "totalResults": totalResults,
+        "articles":
+            List<dynamic>.from(articles!.map((article) => article.toJson())),
+      };
 }
 
 class Article {

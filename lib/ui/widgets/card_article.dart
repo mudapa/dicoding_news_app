@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../model/article_model.dart';
+import '../../share/navigation.dart';
 import '../../share/style.dart';
-import '../pages/article_detail_page.dart';
 
 class CardArticle extends StatelessWidget {
   final Article article;
@@ -30,13 +30,7 @@ class CardArticle extends StatelessWidget {
           ),
           subtitle: Text(article.author ?? ""),
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return ArticleDetailPage(
-                  article: article,
-                );
-              },
-            ));
+            Navigation.intentWithData('/article_detail_page', article);
           }),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../model/article_model.dart';
-import 'article_web_view.dart';
+import '../../share/navigation.dart';
 
 class ArticleDetailPage extends StatelessWidget {
   final Article article;
@@ -14,7 +14,7 @@ class ArticleDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(article.title!),
+        title: const Text('News App'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -52,16 +52,8 @@ class ArticleDetailPage extends StatelessWidget {
                   ElevatedButton(
                     child: const Text('Read more'),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ArticleWebView(
-                              url: article.url!,
-                            );
-                          },
-                        ),
-                      );
+                      Navigation.intentWithData(
+                          '/article_web_view', article.url!);
                     },
                   ),
                 ],

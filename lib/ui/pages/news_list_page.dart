@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/news_provider.dart';
+import '../../provider/scheduling_provider.dart';
 import '../../services/article_service.dart';
+import '../../share/notification_helper.dart';
 import '../../share/style.dart';
 import '../widgets/platform_widget.dart';
 import 'article_list_page.dart';
@@ -19,6 +21,7 @@ class NewsListPage extends StatefulWidget {
 }
 
 class _NewsListPageState extends State<NewsListPage> {
+  final NotificationHelper _notificationHelper = NotificationHelper();
   int _bottomNavIndex = 0;
 
   final List<Widget> _listWidget = [
@@ -26,7 +29,10 @@ class _NewsListPageState extends State<NewsListPage> {
       create: (_) => NewsProvider(articleService: ArticleService()),
       child: const ArticleListPage(),
     ),
-    const SettingsPage(),
+    ChangeNotifierProvider<SchedulingProvider>(
+      create: (_) => SchedulingProvider(),
+      child: const SettingsPage(),
+    ),
   ];
 
   final List<BottomNavigationBarItem> _bottomNavBarItems = [
@@ -39,6 +45,19 @@ class _NewsListPageState extends State<NewsListPage> {
       label: "Setting",
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationHelper
+        .configureSelectNotificationSubject('/article_detail_page');
+  }
+
+  @override
+  void dispose() {
+    selectNotificationSubject.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
