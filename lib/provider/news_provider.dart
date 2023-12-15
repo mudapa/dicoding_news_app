@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../model/article_model.dart';
 import '../services/article_service.dart';
-
-enum ResultState { loading, noData, hasData, error }
+import '../share/result_state.dart';
 
 class NewsProvider extends ChangeNotifier {
   final ArticleService articleService;

@@ -2,15 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../provider/news_provider.dart';
-import '../../provider/scheduling_provider.dart';
-import '../../services/article_service.dart';
 import '../../share/notification_helper.dart';
 import '../../share/style.dart';
 import '../widgets/platform_widget.dart';
 import 'article_list_page.dart';
+import 'bookmarks_page.dart';
 import 'settings_page.dart';
 
 class NewsListPage extends StatefulWidget {
@@ -25,20 +22,21 @@ class _NewsListPageState extends State<NewsListPage> {
   int _bottomNavIndex = 0;
 
   final List<Widget> _listWidget = [
-    ChangeNotifierProvider<NewsProvider>(
-      create: (_) => NewsProvider(articleService: ArticleService()),
-      child: const ArticleListPage(),
-    ),
-    ChangeNotifierProvider<SchedulingProvider>(
-      create: (_) => SchedulingProvider(),
-      child: const SettingsPage(),
-    ),
+    const ArticleListPage(),
+    const BookmarksPage(),
+    const SettingsPage(),
   ];
 
   final List<BottomNavigationBarItem> _bottomNavBarItems = [
     BottomNavigationBarItem(
       icon: Icon(Platform.isIOS ? CupertinoIcons.news : Icons.public),
       label: "Headline",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Platform.isIOS
+          ? CupertinoIcons.bookmark
+          : Icons.collections_bookmark),
+      label: "Bookmarks",
     ),
     BottomNavigationBarItem(
       icon: Icon(Platform.isIOS ? CupertinoIcons.settings : Icons.settings),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/news_provider.dart';
+import '../../share/result_state.dart';
 import '../widgets/card_article.dart';
 import '../widgets/platform_widget.dart';
 

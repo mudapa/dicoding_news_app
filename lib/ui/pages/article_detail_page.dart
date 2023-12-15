@@ -20,8 +20,10 @@ class ArticleDetailPage extends StatelessWidget {
         child: Column(
           children: [
             Hero(
-              tag: article.urlToImage!,
-              child: Image.network(article.urlToImage!),
+              tag: article.urlToImage ??
+                  "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg",
+              child: Image.network(article.urlToImage ??
+                  "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg"),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
